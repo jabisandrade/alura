@@ -1,4 +1,9 @@
-class NegociacaoController {
+import { logarTempoDeExecucao  } from '../helpers/decorators/index';
+import {NegociacoesView, MensagemView} from '../views/index';
+import {Negociacoes, Negociacao } from '../models/index';
+
+
+export class NegociacaoController {
 
     private _inputData: JQuery;
     private _inputQuantidade: JQuery;
@@ -15,12 +20,20 @@ class NegociacaoController {
         this._negociacoesView.update(this._negociacoes);
     }
 
+    @logarTempoDeExecucao()
     adiciona(event: Event) {
 
         event.preventDefault();
 
+        let data = new Date(this._inputData.val().replace(/-/g, ','));
+
+        if(this._ehDiaUtil(data)) {
+            this._mensagemView.update('Informe apenas dias uteis, por favor!');
+            return;
+        }
+
         const negociacao = new Negociacao(
-            new Date(this._inputData.val().replace(/-/g, ',')), 
+            data, 
             parseInt(this._inputQuantidade.val()),
             parseFloat(this._inputValor.val())
         );
@@ -29,4 +42,18 @@ class NegociacaoController {
         this._negociacoesView.update(this._negociacoes);
         this._mensagemView.update('Negociação adicionada com sucesso');
     }
+
+    private _ehDiaUtil(data: Date){
+        return (data.getDay()== DiaDaSemana.Domingo || data.getDay()== DiaDaSemana.Sabado);
+    }
+}
+
+enum DiaDaSemana {
+    Domingo,
+    Segunda,
+    Terca,
+    Quarta,
+    Quinta,
+    Sexta,
+    Sabado
 }
