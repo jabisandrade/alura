@@ -1,7 +1,7 @@
 import { logarTempoDeExecucao, domInject, throttle } from "../helpers/decorators/index";
 import { NegociacoesView, MensagemView } from "../views/index";
 import { Negociacoes, Negociacao, NegociacaoParcial } from "../models/index";
-import { NegociacaoService } from '../services/index';
+import { NegociacaoService, ResponseHandler } from '../services/index';
 
 
 let timer = 0;
@@ -56,26 +56,26 @@ export class NegociacaoController {
     );
   }
 
-  @throttle()
-  importaDados() {
+// app/ts/controllers/NegociacaoController.ts
 
-      function isOk(res: Response) {
+// código anterior omitido 
 
-          if(res.ok) {
-              return res;
-          } else {
-              throw new Error(res.statusText);
-          }
-      }
+@throttle()
+importaDados() {
 
-      this._service
-          .obterNegociacoes(isOk)
-          .then(negociacoes => {
-              negociacoes.forEach(negociacao => 
-                  this._negociacoes.adiciona(negociacao));
-              this._negociacoesView.update(this._negociacoes);
-          });       
-  }
+    this._service
+        .obterNegociacoes((res: Response) => {
+            if(res.ok) return res;
+            throw new Error(res.statusText);
+        })
+        .then(negociacoes => {
+            negociacoes.forEach(negociacao => 
+                this._negociacoes.adiciona(negociacao));
+            this._negociacoesView.update(this._negociacoes);
+        });
+
+}
+// código posterior omitido
 }
 
 enum DiaDaSemana {

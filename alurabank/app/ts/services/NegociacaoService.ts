@@ -12,3 +12,8 @@ export class NegociacaoService {
             .catch(err => {throw new Error(err) });
     }
 }
+
+export interface ResponseHandler {
+
+    (res: Response): Response
+}
