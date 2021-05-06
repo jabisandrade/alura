@@ -1,2 +1,6 @@
-<ap-photo url = 'https://i.pinimg.com/originals/a3/66/eb/a366eb4f377db408e13db6d04897ab8b.jpg' description = 'Lion'></ap-photo>
-<ap-photo url = 'https://i.pinimg.com/originals/45/91/c8/4591c8db6cb652a3e73cc8595bcf40b8.jpg' description = 'Leoa'></ap-photo>
+<ap-photo
+    *ngFor="let photo of photos"
+    [url]="photo.url"
+    [description]="photo.description"
+>
+</ap-photo>
